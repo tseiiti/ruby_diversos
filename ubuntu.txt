@@ -1,0 +1,41 @@
+# altera font
+sudo dpkg-reconfigure console-setup
+
+# aumentar tamanho terminal
+sudo vim /etc/default/grub
+GRUB_GFXMODE=800x600x32
+update-grub && reboot
+
+# instala o yardr dotfiles pro vim
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install git rake vim-gtk
+sh -c "`curl -fsSL https://raw.githubusercontent.com/skwp/dotfiles/master/install.sh`"
+
+# download opencobol
+sudo apt-get install make libgmp3-dev libltdl-dev libdb-dev libncurses-dev
+wget "http://sourceforge.net/projects/open-cobol/files/open-cobol/2.0/open-cobol-2.0-feb2012.tar.gz"
+tar -xvf open-cobol-2.0-feb2012.tar.gz
+sudo ./configure
+sudo make
+sudo make install
+sudo vim /etc/ld.so.conf
+include /etc/ld.so.conf.d/*.conf /usr/local/lib
+ln /lib/x86_64-linux-gnu/libncurses.so.5.9 /lib/libncurses.so
+sudo ldconfig
+
+# criar compartilhamento
+#sudo mount -t cifs //192.168.25.2/shared /mnt/shared -o username=t,password=740316
+sudo apt-get install samba cifs-utils
+
+# criar compartilhamento windows (pasta>>propriedades>>compartilhamento>>compartilhamento avançado)
+sudo mkdir /mnt/shared
+sudo vim /etc/fstab
+
+#sudo uid seiiti
+//192.168.25.2/shared /mnt/shared cifs credentials=/root/.shared_pwd,uid=1000,gid=1000,iocharset=utf8
+sudo echo username=seiiti>/root/.shared_pwd
+sudo echo password=senha>/root/.shared_pwd
+sudo chmod 600 /root/.shared_pwd
+
+# instala ruby on rails
